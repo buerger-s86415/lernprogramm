@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xml:lang="de" lang="de">
+<head>
+    <title>Lernprogramm</title>
+    <meta charset="UTF-8"/>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" type="text/javascript"></script>
+</head>
+<body>
+
+  <header>
+    <h1>Noten lernen</h1>
+    <img src="assets/header.jpg" alt="Banner" id="banner" />
+  </header>
+
+  <main>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Neugikeiten</a></li>
+        <li><a href="#">Kontakt</a></li>
+      </ul>
+    </nav>
+
+    <article>
+      <section id="fortschritt">
+        <label for="progress">Lernfortschritt:</label>
+        <div class="bar-container">
+          <div class="bar-green" style="width: 0%;"></div>
+          <div class="bar-red" style="width: 0%;"></div>
+          <div class="bar-grey" style="width: 100%;"></div>
+        </div>
+      </section>
+
+      <section id="kategorien">
+        <fieldset>
+            <legend>Kategorie wählen:</legend>
+            <label><input type="radio" name="kategorie" value="noten" checked /> Noten</label>
+            <label><input type="radio" name="kategorie" value="akkorde" /> Akkorde</label>
+            <label><input type="radio" name="kategorie" value="mathe" /> Mathe</label>
+        </fieldset>
+        <button id="start">Start</button>
+        </section>
+
+
+      <section id="aufgabe">
+        <div id="frage"></div>
+        <div id="antworten">
+          <button></button>
+          <button></button>
+          <button></button>
+          <button></button>
+        </div>
+        <p id="feedback"></p>
+      </section>
+    </article>
+
+    <aside>
+      <h3>Online</h3>
+      <div class="status-icon">📶</div>
+    </aside>
+  </main>
+
+  <footer>
+    Stand: 18.05.2025
+  </footer>
+
+</body>
+</html>

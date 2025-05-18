@@ -1,0 +1,174 @@
+:root {
+  --bg: #fdfbe6;
+  --primary: #3a7ca5;
+  --accent: #f4b400;
+  --correct: #90ee90;
+  --wrong: #f08080;
+  --neutral: #e0e0e0;
+  --shadow: rgba(0, 0, 0, 0.05);
+  --font: 'Segoe UI', sans-serif;
+  --radius: 0.6rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  background-color: var(--bg);
+  color: #222;
+}
+
+header {
+  background-color: var(--primary);
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+#banner {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+main {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+nav {
+  background-color: #c7e0f4;
+  flex: 0 0 10rem;
+  padding: 1rem;
+  border-radius: var(--radius);
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+nav ul li {
+  margin-bottom: 0.5rem;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: var(--primary);
+  font-weight: bold;
+}
+
+article {
+  flex: 1 1 60%;
+  background-color: white;
+  padding: 1rem;
+  border-radius: var(--radius);
+  box-shadow: 0 0 5px var(--shadow);
+}
+
+aside {
+  flex: 0 0 12rem;
+  background-color: #cde89f;
+  padding: 1rem;
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+footer {
+  background-color: var(--primary);
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  margin-top: 2rem;
+}
+
+#fortschritt {
+  margin-bottom: 1rem;
+}
+
+.bar-container {
+  height: 1.5rem;
+  background-color: var(--neutral);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+}
+
+.bar-green {
+  width: 40%;
+  background-color: var(--correct);
+}
+
+.bar-red {
+  width: 20%;
+  background-color: var(--wrong);
+}
+
+.bar-grey {
+  flex-grow: 1;
+}
+
+#kategorien {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+#aufgabe {
+  margin-top: 1rem;
+}
+
+#frage {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+#antworten {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+#antworten button {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radius);
+  background-color: #fafafa;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+#antworten button:hover {
+  background-color: var(--accent);
+}
+
+.status-icon {
+  font-size: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 780px) {
+  main {
+    flex-direction: column;
+  }
+
+  nav, article, aside {
+    flex: 1 1 100%;
+  }
+
+  #kategorien {
+    flex-direction: column;
+  }
+
+  #antworten {
+    flex-direction: column;
+  }
+}
