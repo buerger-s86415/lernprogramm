@@ -20,7 +20,7 @@ self.addEventListener("install", event => {
   self.skipWaiting();
 });
 
-// Aktivierung: Alte Caches löschen (wenn du updatest)
+// Aktivierung: Alte Caches löschen
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keyList => 

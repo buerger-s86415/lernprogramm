@@ -12,27 +12,44 @@ document.addEventListener('DOMContentLoaded', () => {
 class Model {
     constructor() {
         this.fragen = [
-            {
-                frage: "x² * x²",
-                antworten: ["x²", "x²²", "4x²", "x⁴"],
-                loesung: 3
-            },
-            {
-                frage: "2 + 2",
-                antworten: ["3", "4", "5", "2"],
-                loesung: 1
-            }
+            { frage: "x² * x²", antworten: ["x⁴", "x²", "4x²", "x²²"] },
+            { frage: "2 + 2", antworten: ["4", "3", "5", "2"] },
+            { frage: "5 * 6", antworten: ["30", "11", "56", "35"] },
+            { frage: "Wurzel aus 49", antworten: ["7", "6", "8", "9"] },
+            { frage: "3³", antworten: ["27", "9", "81", "12"] },
+            { frage: "10 / 2", antworten: ["5", "2", "10", "0.2"] },
+            { frage: "x^2 + 2x + 1 = ?", antworten: ["(x+1)²", "x³", "x²", "x+1"] },
+            { frage: "a² + b² = ?", antworten: ["c²", "2ab", "a²b²", "a+b"] },
+            { frage: "sin(90°)", antworten: ["1", "0", "0.5", "√2/2"] },
+            { frage: "log₁₀(100)", antworten: ["2", "10", "1", "0.01"] }
         ];
     }
 
     getTask(nr) {
-        return this.fragen[nr % this.fragen.length]; // zyklisch
+        const aufgabe = this.fragen[nr % this.fragen.length];
+        const { gemischt, loesungIndex } = this.mischeAntworten(aufgabe.antworten);
+        return {
+            frage: aufgabe.frage,
+            antworten: gemischt,
+            loesung: loesungIndex
+        };
+    }
+
+    mischeAntworten(antworten) {
+        const korrekt = antworten[0];
+        const gemischt = [...antworten]
+            .map(value => ({ value, sort: Math.random() }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(entry => entry.value);
+        const loesungIndex = gemischt.indexOf(korrekt);
+        return { gemischt, loesungIndex };
     }
 
     checkAnswer(task, chosenIndex) {
         return task.loesung === chosenIndex;
     }
 }
+
 
 
 // ################ Presenter ###################
@@ -65,7 +82,7 @@ class Presenter {
         }
         console.log(`Richtig: ${this.stats.richtig}, Falsch: ${this.stats.falsch}`);
         this.currentIndex++;
-        this.setTask(); // nächste Frage
+        this.setTask();
     }
 }
 
