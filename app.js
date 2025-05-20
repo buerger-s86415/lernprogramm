@@ -99,6 +99,8 @@ class View {
     }
 
     async start() {
+        document.getElementById("aufgabe").classList.add("visible");
+        document.getElementById("start").style.display = "none";
         await this.p.setTask();
     }
 
