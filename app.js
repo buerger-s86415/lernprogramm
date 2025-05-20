@@ -5,6 +5,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const presenter = new Presenter();
     const view = new View(presenter);
     presenter.setModelAndView(model, view);
+
+    //initial erst prüfen
+    updateOnlineStatus();
+    //danach über EL
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
 });
 
 
@@ -177,7 +183,7 @@ class View {
             document.getElementById("aufgabe").classList.remove("visible");
             document.getElementById("start").style.display = "inline-block";
             document.getElementById("frage").textContent = "";
-            
+
             const buttons = document.querySelectorAll("#antworten button");
             buttons.forEach(btn => btn.textContent = "");
 
@@ -188,5 +194,18 @@ class View {
                 if (r.value === this.lastKategorie) r.checked = true;
             });
         }
+    }
+}
+
+function updateOnlineStatus() {
+    const icon = document.querySelector(".status-icon");
+    const title = document.querySelector("aside h3");
+
+    if (navigator.onLine) {
+        icon.textContent = "📶";
+        title.textContent = "Online";
+    } else {
+        icon.textContent = "❌";
+        title.textContent = "Offline";
     }
 }
