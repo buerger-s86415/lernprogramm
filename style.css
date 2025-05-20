@@ -34,6 +34,14 @@ header {
   display: block;
 }
 
+button.correct {
+  background-color: var(--correct) !important;
+}
+
+button.wrong {
+  background-color: var(--wrong) !important;
+}
+
 main {
   display: flex;
   flex-wrap: wrap;

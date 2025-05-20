@@ -81,7 +81,8 @@ class Presenter {
         }
         console.log(`Richtig: ${this.stats.richtig}, Falsch: ${this.stats.falsch}`);
         this.currentIndex++;
-        this.setTask();
+        setTimeout(() => this.setTask(), 500);
+        return korrekt;
     }
 }
 
@@ -132,7 +133,17 @@ class View {
     checkEvent(event) {
         if (event.target.nodeName === "BUTTON") {
             const index = Number(event.target.getAttribute("data-index"));
-            this.p.checkAnswer(index);
+            const button = event.target;
+            const isCorrect = this.p.checkAnswer(index); //true oder false
+            
+            //Farbe
+            const className = isCorrect ? "correct" : "wrong";
+            button.classList.add(className);
+
+            //kurz warten, dann weiter
+            setTimeout(()=>{
+                button.classList.remove(className);
+            }, 500);
         }
     }
 }
