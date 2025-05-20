@@ -1,0 +1,16 @@
+{
+  "noten": [
+    { "a": "Welche Note ist (C4)?", "l": ["C", "D", "E", "F"] },
+    { "a": "Welche Note ist (E4)?", "l": ["E", "F", "G", "D"] }
+  ],
+  "akkorde": [
+    { "a": "Welche Töne bilden einen C-Dur-Akkord?", "l": ["C E G", "C D G", "C F A", "C E A"] },
+    { "a": "Welche Töne bilden einen G-Dur-Akkord?", "l": ["G B D", "G A D", "G B F", "G D F"] }
+  ],
+  "mathe": [
+    { "a": "x^2 + x^2", "l": ["2x^2", "x^4", "2x", "x^2 + x^2"] },
+    { "a": "x^2 * x^2", "l": ["x^4", "x^2", "2x^2", "x^8"] },
+    { "a": "Wurzel aus 49", "l": ["7", "6", "8", "9"] },
+    { "a": "log₁₀(100)", "l": ["2", "10", "1", "0.01"] }
+  ]
+}

@@ -11,25 +11,20 @@ document.addEventListener('DOMContentLoaded', () => {
 // #################### Model ####################
 class Model {
     constructor() {
-        this.fragen = [
-            { frage: "x² * x²", antworten: ["x⁴", "x²", "4x²", "x²²"] },
-            { frage: "2 + 2", antworten: ["4", "3", "5", "2"] },
-            { frage: "5 * 6", antworten: ["30", "11", "56", "35"] },
-            { frage: "Wurzel aus 49", antworten: ["7", "6", "8", "9"] },
-            { frage: "3³", antworten: ["27", "9", "81", "12"] },
-            { frage: "10 / 2", antworten: ["5", "2", "10", "0.2"] },
-            { frage: "x^2 + 2x + 1 = ?", antworten: ["(x+1)²", "x³", "x²", "x+1"] },
-            { frage: "a² + b² = ?", antworten: ["c²", "2ab", "a²b²", "a+b"] },
-            { frage: "sin(90°)", antworten: ["1", "0", "0.5", "√2/2"] },
-            { frage: "log₁₀(100)", antworten: ["2", "10", "1", "0.01"] }
-        ];
+        this.alleFragen = null;
     }
 
-    getTask(nr) {
-        const aufgabe = this.fragen[nr % this.fragen.length];
-        const { gemischt, loesungIndex } = this.mischeAntworten(aufgabe.antworten);
+    async loadLocalQuestions() {
+        const res = await fetch("data/fragen.json");
+        this.alleFragen = await res.json();
+    }
+
+    getLocalTask(kategorie, nr) {
+        const fragen = this.alleFragen[kategorie];
+        const aufgabe = fragen[nr % fragen.length];
+        const { gemischt, loesungIndex } = this.mischeAntworten(aufgabe.l);
         return {
-            frage: aufgabe.frage,
+            frage: aufgabe.a,
             antworten: gemischt,
             loesung: loesungIndex
         };
@@ -50,8 +45,6 @@ class Model {
     }
 }
 
-
-
 // ################ Presenter ###################
 class Presenter {
     constructor() {
@@ -67,9 +60,15 @@ class Presenter {
         this.v = v;
     }
 
-    setTask() {
-        this.task = this.m.getTask(this.currentIndex);
-        this.v.renderText(this.task.frage);
+    async setTask() {
+        const kategorie = document.querySelector('input[name="kategorie"]:checked').value;
+
+        if (!this.m.alleFragen) {
+            await this.m.loadLocalQuestions();
+        }
+
+        this.task = this.m.getLocalTask(kategorie, this.currentIndex);
+        this.v.renderText(this.task.frage, kategorie);
         this.v.renderButtons(this.task.antworten);
     }
 
@@ -99,20 +98,32 @@ class View {
         document.getElementById("start").addEventListener("click", this.start.bind(this), false);
     }
 
-    start() {
-        this.p.setTask();
+    async start() {
+        await this.p.setTask();
     }
 
-    renderText(text) {
+    renderText(text, kategorie) {
         const frageDiv = document.getElementById("frage");
-        frageDiv.textContent = text;
+        if (kategorie === "mathe" && typeof katex !== "undefined") {
+            katex.render(text, frageDiv, { throwOnError: false });
+        } else {
+            frageDiv.textContent = text;
+        }
     }
 
     renderButtons(antworten) {
+        const kategorie = document.querySelector('input[name="kategorie"]:checked').value;
         const buttons = document.querySelectorAll("#antworten button");
+
         antworten.forEach((text, i) => {
-            buttons[i].textContent = text;
             buttons[i].setAttribute("data-index", i);
+
+            if (kategorie === "mathe" && typeof katex !== "undefined") {
+                buttons[i].innerHTML = ""; // leeren
+                katex.render(text, buttons[i], { throwOnError: false });
+            } else {
+                buttons[i].textContent = text;
+            }
         });
     }
 
