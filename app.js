@@ -87,7 +87,13 @@ class Presenter {
         }
         console.log(`Richtig: ${this.stats.richtig}, Falsch: ${this.stats.falsch}`);
         this.currentIndex++;
-        setTimeout(() => this.setTask(), 500);
+        
+        if (this.currentIndex >= 15) {
+            this.v.showStats(this.stats);
+            this.saveStats();
+        } else {
+            setTimeout(() => this.setTask(), 500);
+        }
         return korrekt;
     }
 
@@ -96,6 +102,19 @@ class Presenter {
         this.stats.richtig = 0;
         this.stats.falsch = 0;
     }
+
+    saveStats() {
+        const eintrag = {
+            zeit: new Date().toLocaleString(),
+            richtig: this.stats.richtig,
+            falsch: this.stats.falsch
+        };
+
+        const daten = JSON.parse(localStorage.getItem("statistiken") || "[]");
+        daten.push(eintrag);
+        localStorage.setItem("statistiken", JSON.stringify(daten));
+    }
+
 }
 
 
@@ -110,6 +129,7 @@ class View {
     setHandlers() {
         document.getElementById("antworten").addEventListener("click", this.checkEvent.bind(this), false);
         document.getElementById("start").addEventListener("click", this.start.bind(this), false);
+        document.getElementById("nav-statistik").addEventListener("click", this.showAllStats.bind(this));
         this.lastKategorie = document.querySelector('input[name="kategorie"]:checked').value;
         document.querySelectorAll('input[name="kategorie"]').forEach(radio => {
             radio.addEventListener("change", this.onKategorieChange.bind(this));
@@ -194,6 +214,31 @@ class View {
                 if (r.value === this.lastKategorie) r.checked = true;
             });
         }
+    }
+
+    showStats(stats) {
+        const frageDiv = document.getElementById("frage");
+        frageDiv.textContent = `Ergebnis: ${stats.richtig} richtig, ${stats.falsch} falsch`;
+
+        const antworten = document.getElementById("antworten");
+        antworten.innerHTML = "";
+
+        const feedback = document.getElementById("feedback");
+        feedback.textContent = `Beendet am ${new Date().toLocaleString()}`;
+    }
+
+    showAllStats() {
+        const daten = JSON.parse(localStorage.getItem("statistiken") || "[]");
+        const frageDiv = document.getElementById("frage");
+        const antworten = document.getElementById("antworten");
+        const feedback = document.getElementById("feedback");
+
+        frageDiv.textContent = "Alle bisherigen Durchläufe:";
+        antworten.innerHTML = "";
+
+        feedback.innerHTML = daten.map(entry =>
+            `🕒 ${entry.zeit}: ✅ ${entry.richtig} / ❌ ${entry.falsch}`
+        ).join("<br>");
     }
 }
 
