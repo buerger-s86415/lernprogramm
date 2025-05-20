@@ -84,6 +84,12 @@ class Presenter {
         setTimeout(() => this.setTask(), 500);
         return korrekt;
     }
+
+    resetStats() {
+        this.currentIndex = 0;
+        this.stats.richtig = 0;
+        this.stats.falsch = 0;
+    }
 }
 
 
@@ -92,14 +98,20 @@ class View {
     constructor(presenter) {
         this.p = presenter;
         this.setHandlers();
+        this.hasStarted = false;
     }
 
     setHandlers() {
         document.getElementById("antworten").addEventListener("click", this.checkEvent.bind(this), false);
         document.getElementById("start").addEventListener("click", this.start.bind(this), false);
+        this.lastKategorie = document.querySelector('input[name="kategorie"]:checked').value;
+        document.querySelectorAll('input[name="kategorie"]').forEach(radio => {
+            radio.addEventListener("change", this.onKategorieChange.bind(this));
+        });
     }
 
     async start() {
+        this.hasStarted = true;
         document.getElementById("aufgabe").classList.add("visible");
         document.getElementById("start").style.display = "none";
         await this.p.setTask();
@@ -144,6 +156,37 @@ class View {
             setTimeout(()=>{
                 button.classList.remove(className);
             }, 500);
+        }
+    }
+
+    onKategorieChange(event) {
+        if(!this.hasStarted){
+            //wenn kein start, dann keine abfrage
+            this.lastKategorie = event.target.value;
+            return;
+        }
+
+        const confirmed = confirm("Bei Kategorieänderung wird der Fortschritt zurückgesetzt. Fortfahren?");
+        if (confirmed) {
+            // Zurücksetzen
+            this.p.resetStats();
+            this.lastKategorie = event.target.value;
+            this.hasStarted = false;
+
+            // UI zurücksetzen
+            document.getElementById("aufgabe").classList.remove("visible");
+            document.getElementById("start").style.display = "inline-block";
+            document.getElementById("frage").textContent = "";
+            
+            const buttons = document.querySelectorAll("#antworten button");
+            buttons.forEach(btn => btn.textContent = "");
+
+        } else {
+            // Änderung rückgängig machen
+            const radios = document.querySelectorAll('input[name="kategorie"]');
+            radios.forEach(r => {
+                if (r.value === this.lastKategorie) r.checked = true;
+            });
         }
     }
 }
