@@ -80,12 +80,13 @@ class Presenter {
 
     checkAnswer(index) {
         const korrekt = this.m.checkAnswer(this.task, index);
+        const gesamt = this.stats.richtig + this.stats.falsch + 1;
         if (korrekt) {
             this.stats.richtig++;
         } else {
             this.stats.falsch++;
         }
-        console.log(`Richtig: ${this.stats.richtig}, Falsch: ${this.stats.falsch}`);
+        console.log(`Richtig: ${this.stats.richtig}, Falsch: ${this.stats.falsch}, gesamt: ${gesamt}`);
         this.currentIndex++;
         
         if (this.currentIndex >= 15) {
@@ -104,10 +105,12 @@ class Presenter {
     }
 
     saveStats() {
+        const gesamt = this.stats.richtig + this.stats.falsch;
         const eintrag = {
             zeit: new Date().toLocaleString(),
             richtig: this.stats.richtig,
-            falsch: this.stats.falsch
+            falsch: this.stats.falsch,
+            gesamt: gesamt
         };
 
         const daten = JSON.parse(localStorage.getItem("statistiken") || "[]");
@@ -117,19 +120,25 @@ class Presenter {
 
 }
 
-
 // ##################### View ####################
 class View {
     constructor(presenter) {
         this.p = presenter;
         this.setHandlers();
         this.hasStarted = false;
+        this.inProgress = false;
+        this.lastKategorie = document.querySelector('input[name="kategorie"]:checked').value;
+
+        document.querySelectorAll('input[name="kategorie"]').forEach(radio => {
+            radio.addEventListener("change", this.onKategorieChange.bind(this));
+        });
     }
 
     setHandlers() {
         document.getElementById("antworten").addEventListener("click", this.checkEvent.bind(this), false);
         document.getElementById("start").addEventListener("click", this.start.bind(this), false);
         document.getElementById("nav-statistik").addEventListener("click", this.showAllStats.bind(this));
+        document.getElementById("nav-home").addEventListener("click", this.showStartScreen.bind(this));
         this.lastKategorie = document.querySelector('input[name="kategorie"]:checked').value;
         document.querySelectorAll('input[name="kategorie"]').forEach(radio => {
             radio.addEventListener("change", this.onKategorieChange.bind(this));
@@ -138,8 +147,14 @@ class View {
 
     async start() {
         this.hasStarted = true;
+        this.inProgress = true;
+
         document.getElementById("aufgabe").classList.add("visible");
+        document.getElementById("aufgabe").style.display = "block";
         document.getElementById("start").style.display = "none";
+        document.getElementById("statistikbereich").style.display = "none";
+        document.getElementById("fortschritt").style.display = "block";
+
         await this.p.setTask();
     }
 
@@ -218,27 +233,60 @@ class View {
 
     showStats(stats) {
         const frageDiv = document.getElementById("frage");
-        frageDiv.textContent = `Ergebnis: ${stats.richtig} richtig, ${stats.falsch} falsch`;
-
-        const antworten = document.getElementById("antworten");
-        antworten.innerHTML = "";
-
         const feedback = document.getElementById("feedback");
-        feedback.textContent = `Beendet am ${new Date().toLocaleString()}`;
+        const antworten = document.getElementById("antworten");
+
+        const gesamt = stats.richtig + stats.falsch;
+
+        frageDiv.textContent = "Lektion beendet.";
+        antworten.innerHTML = "";
+        feedback.textContent = `✅ ${stats.richtig} / ❌ ${stats.falsch} von insgesamt ${gesamt} Fragen`;
     }
 
     showAllStats() {
         const daten = JSON.parse(localStorage.getItem("statistiken") || "[]");
-        const frageDiv = document.getElementById("frage");
-        const antworten = document.getElementById("antworten");
-        const feedback = document.getElementById("feedback");
 
-        frageDiv.textContent = "Alle bisherigen Durchläufe:";
-        antworten.innerHTML = "";
+        // Sichtbarkeit umschalten
+        document.getElementById("aufgabe").style.display = "none";
+        document.getElementById("start").style.display = "none";
+        document.getElementById("statistikbereich").style.display = "block";
+        document.getElementById("kategorien").style.display = "none";
+        document.getElementById("fortschritt").style.display = "none";
 
-        feedback.innerHTML = daten.map(entry =>
-            `🕒 ${entry.zeit}: ✅ ${entry.richtig} / ❌ ${entry.falsch}`
-        ).join("<br>");
+        const container = document.getElementById("statistikliste");
+        container.innerHTML = daten.length === 0
+            ? "<p>Keine Statistiken vorhanden.</p>"
+            : daten.map(entry =>
+                `<p>🕒 ${entry.zeit}: ✅ ${entry.richtig} / ❌ ${entry.falsch} – Gesamt: ${entry.gesamt}</p>`
+            ).join("");
+    }
+
+    showStartScreen() {
+        if (this.inProgress) {
+            const confirmed = confirm("Dein Lernfortschritt geht verloren. Fortfahren?");
+            if (!confirmed) return;
+            this.p.resetStats();
+        }
+
+        this.hasStarted = false;
+        this.inProgress = false;
+
+        document.getElementById("aufgabe").classList.remove("visible");
+        document.getElementById("aufgabe").style.display = "none";
+        document.getElementById("kategorien").style.display = "block";
+        document.getElementById("fortschritt").style.display = "block";
+        document.getElementById("start").style.display = "inline-block";
+        document.getElementById("statistikbereich").style.display = "none";
+
+        document.getElementById("frage").textContent = "";
+        document.getElementById("feedback").textContent = "";
+
+        const buttons = document.querySelectorAll("#antworten button");
+        buttons.forEach(btn => btn.textContent = "");
+
+        // Kategorie zurücksetzen auf letzte auswahl
+        const radios = document.querySelectorAll('input[name="kategorie"]');
+        radios.forEach(r => r.checked = (r.value === this.lastKategorie));
     }
 }
 

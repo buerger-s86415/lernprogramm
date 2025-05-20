@@ -8,7 +8,7 @@ const FILES_TO_CACHE = [
   "/Lernprogramm/app.js",
   "/Lernprogramm/manifest.json",
   "/Lernprogramm/sw.js",
-  "/Lernprogramm/data/fragen.json",
+  "/Lernprogramm/data/fragen.json"
 ];
 
 // Installation: Dateien cachen
