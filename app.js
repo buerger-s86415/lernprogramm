@@ -89,9 +89,10 @@ class Presenter {
         console.log(`Richtig: ${this.stats.richtig}, Falsch: ${this.stats.falsch}, gesamt: ${gesamt}`);
         this.currentIndex++;
         
-        if (this.currentIndex >= 15) {
+        if (this.currentIndex >= 3) {
             this.v.showStats(this.stats);
             this.saveStats();
+            return;
         } else {
             setTimeout(() => this.setTask(), 500);
         }
@@ -171,6 +172,8 @@ class View {
         const kategorie = document.querySelector('input[name="kategorie"]:checked').value;
         const buttons = document.querySelectorAll("#antworten button");
 
+        if(buttons.length < antworten.length) return;
+
         antworten.forEach((text, i) => {
             buttons[i].setAttribute("data-index", i);
 
@@ -220,7 +223,7 @@ class View {
             document.getElementById("frage").textContent = "";
 
             const buttons = document.querySelectorAll("#antworten button");
-            buttons.forEach(btn => btn.textContent = "");
+            buttons.forEach(btn => btn.innerHTML);
 
         } else {
             // Änderung rückgängig machen
@@ -235,12 +238,16 @@ class View {
         const frageDiv = document.getElementById("frage");
         const feedback = document.getElementById("feedback");
         const antworten = document.getElementById("antworten");
-
         const gesamt = stats.richtig + stats.falsch;
 
         frageDiv.textContent = "Lektion beendet.";
         antworten.innerHTML = "";
         feedback.textContent = `✅ ${stats.richtig} / ❌ ${stats.falsch} von insgesamt ${gesamt} Fragen`;
+        document.getElementById("start").style.display = "inline.block";
+
+        
+        this.hasStartet = false;
+        this.inProgress = false;
     }
 
     showAllStats() {
@@ -257,7 +264,7 @@ class View {
         container.innerHTML = daten.length === 0
             ? "<p>Keine Statistiken vorhanden.</p>"
             : daten.map(entry =>
-                `<p>🕒 ${entry.zeit}: ✅ ${entry.richtig} / ❌ ${entry.falsch} – Gesamt: ${entry.gesamt}</p>`
+                `<p>🕒 ${entry.zeit}: ✅ ${entry.richtig} / ❌ ${entry.falsch}</p>`
             ).join("");
     }
 
@@ -273,7 +280,7 @@ class View {
 
         document.getElementById("aufgabe").classList.remove("visible");
         document.getElementById("aufgabe").style.display = "none";
-        document.getElementById("kategorien").style.display = "block";
+        document.getElementById("kategorien").style.display = "flex";
         document.getElementById("fortschritt").style.display = "block";
         document.getElementById("start").style.display = "inline-block";
         document.getElementById("statistikbereich").style.display = "none";

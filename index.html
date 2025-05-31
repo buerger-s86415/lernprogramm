@@ -28,7 +28,7 @@
     </ul>
     </nav>
 
-    <article>
+    <article class="mainWindow">
       <section id="fortschritt">
         <label for="progress">Lernfortschritt:</label>
         <div class="bar-container">
@@ -38,32 +38,40 @@
         </div>
       </section>
 
-      <section id="kategorien">
-        <fieldset>
-            <legend>Kategorie wählen:</legend>
-            <label><input type="radio" name="kategorie" value="noten" checked /> Noten</label>
-            <label><input type="radio" name="kategorie" value="akkorde" /> Akkorde</label>
-            <label><input type="radio" name="kategorie" value="mathe" /> Mathe</label>
-        </fieldset>
-        <button id="start">Start</button>
-        </section>
+    <section id="kategorien">
+      <legend>Kategorien:</legend>
+      <div class="kat-buttons">
+        <label class="kat-container">
+          <input type="radio" name="kategorie" value="noten" checked />
+          Noten
+        </label>
+        <label class="kat-container">
+          <input type="radio" name="kategorie" value="akkorde" />
+          Akkorde
+        </label>
+        <label class="kat-container">
+          <input type="radio" name="kategorie" value="mathe" />
+          Mathe
+        </label>
+      </div>
+      <button id="start">Start</button>
+    </section>
 
-      <section id="aufgabe">
-        <div id="frage"></div>
-        <div id="antworten">
-          <button></button>
-          <button></button>
-          <button></button>
-          <button></button>
-        </div>
-        <p id="feedback"></p>
-      </section>
+    <section id="aufgabe">
+      <div id="frage"></div>
+      <div id="antworten">
+        <button></button>
+        <button></button>
+        <button></button>
+        <button></button>
+      </div>
+      <p id="feedback"></p>
+    </section>
 
-      <section id="statistikbereich" style="display: none;">
+    <section id="statistikbereich" style="display: none;">
         <h2>Statistik</h2>
         <div id="statistikliste"></div>
-      </section>
-
+    </section>
     </article>
 
     <aside>
@@ -73,7 +81,7 @@
   </main>
 
   <footer>
-    Stand: 18.05.2025
+    Stand: 31.05.2025
   </footer>
 
 </body>

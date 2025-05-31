@@ -1,6 +1,7 @@
 :root {
   --bg: #fdfbe6;
   --primary: #3a7ca5;
+  --secondary: #c7e0f4;
   --accent: #f4b400;
   --correct: #90ee90;
   --wrong: #f08080;
@@ -49,8 +50,22 @@ main {
   gap: 1rem;
 }
 
+.mainWindow {
+  flex: 1 1 60%;
+  min-height: 100%; /*view-height (füllt mindestens die gesamte höhe des viewüprts*/
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--bg);  
+  padding: 1rem;
+  border: 10px, solid;
+  box-shadow: 0 0 5px var(--shadow);
+  
+  padding: 1em;
+}
+
 nav {
-  background-color: #c7e0f4;
+  background-color: var(--secondary);
   flex: 0 0 10rem;
   padding: 1rem;
   border-radius: var(--radius);
@@ -69,14 +84,6 @@ nav ul li a {
   text-decoration: none;
   color: var(--primary);
   font-weight: bold;
-}
-
-article {
-  flex: 1 1 60%;
-  background-color: white;
-  padding: 1rem;
-  border-radius: var(--radius);
-  box-shadow: 0 0 5px var(--shadow);
 }
 
 aside {
@@ -121,11 +128,54 @@ footer {
   flex-grow: 1;
 }
 
+.kat-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.kat-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondary);
+  color: var(--primary);
+  padding: 0.75rem 3.5rem;
+  border-radius: var(--radius);
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: 2px solid transparent;
+  font-size: 1rem;
+}
+
+.kat-container:hover {
+  background-color: var(--primary);
+  color: var(--secondary);
+}
+
+.kat-container input[type="radio"] {
+  display: none;
+}
+
+.kat-container input[type="radio"]:checked + label,
+.kat-container:has(input[type="radio"]:checked) {
+  color: var(--secondary);
+  border-color: #222;
+  background-color: var(--primary);
+}
+
 #kategorien {
+  text-decoration: bold;
+  color: var(--primary);
   margin-bottom: 1rem;
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
 }
 
 #aufgabe {
@@ -164,20 +214,23 @@ footer {
 }
 
 #start {
-  background-color: var(--accent);
-  color: #000;
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  border: none;
+  display: block;
+  background: linear-gradient(135deg, var(--accent), #ffd95e);
+  color: #222;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.3rem;
+  font-weight: bold;
+  border: 2px solid #e6a800;
   border-radius: var(--radius);
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 0.5rem;
+  margin: 0.5rem auto;
 }
 
 #start:hover {
+  transform: scale(1.10);
   background-color: #e6a800;
 }
+
 
 .status-icon {
   font-size: 2rem;
