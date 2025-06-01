@@ -140,6 +140,7 @@ class View {
         document.getElementById("start").addEventListener("click", this.start.bind(this), false);
         document.getElementById("nav-statistik").addEventListener("click", this.showAllStats.bind(this));
         document.getElementById("nav-home").addEventListener("click", this.showStartScreen.bind(this));
+        document.getElementById("nav-hilfe").addEventListener("click", this.showHelp.bind(this));
         this.lastKategorie = document.querySelector('input[name="kategorie"]:checked').value;
         document.querySelectorAll('input[name="kategorie"]').forEach(radio => {
             radio.addEventListener("change", this.onKategorieChange.bind(this));
@@ -154,7 +155,18 @@ class View {
         document.getElementById("aufgabe").style.display = "block";
         document.getElementById("start").style.display = "none";
         document.getElementById("statistikbereich").style.display = "none";
+        document.getElementById("feedback").textContent = "";
         document.getElementById("fortschritt").style.display = "block";
+        document.getElementById("hilfebereich").style.display = "none";
+
+
+        const antwortContainer = document.getElementById("antworten");
+        antwortContainer.innerHTML = `
+        <button></button>
+        <button></button>
+        <button></button>
+        <button></button>
+        `;
 
         await this.p.setTask();
     }
@@ -204,32 +216,24 @@ class View {
     }
 
     onKategorieChange(event) {
-        if(!this.hasStarted){
-            //wenn kein start, dann keine abfrage
-            this.lastKategorie = event.target.value;
+        const neueKategorie = event.target.value;
+
+        if (!this.hasStarted) {
+            // Wenn kein Durchlauf aktiv, letzte Auswahl merken
+            this.lastKategorie = neueKategorie;
             return;
         }
 
         const confirmed = confirm("Bei Kategorieänderung wird der Fortschritt zurückgesetzt. Fortfahren?");
         if (confirmed) {
-            // Zurücksetzen
-            this.p.resetStats();
-            this.lastKategorie = event.target.value;
-            this.hasStarted = false;
-
-            // UI zurücksetzen
-            document.getElementById("aufgabe").classList.remove("visible");
-            document.getElementById("start").style.display = "inline-block";
-            document.getElementById("frage").textContent = "";
-
-            const buttons = document.querySelectorAll("#antworten button");
-            buttons.forEach(btn => btn.innerHTML);
-
+            this.p.resetStats(); // Statistik zurücksetzen
+            this.lastKategorie = neueKategorie;
+            this.showStartScreen(true);
         } else {
-            // Änderung rückgängig machen
+            // Auswahl rückgängig machen
             const radios = document.querySelectorAll('input[name="kategorie"]');
             radios.forEach(r => {
-                if (r.value === this.lastKategorie) r.checked = true;
+                r.checked = (r.value === this.lastKategorie);
             });
         }
     }
@@ -243,7 +247,7 @@ class View {
         frageDiv.textContent = "Lektion beendet.";
         antworten.innerHTML = "";
         feedback.textContent = `✅ ${stats.richtig} / ❌ ${stats.falsch} von insgesamt ${gesamt} Fragen`;
-        document.getElementById("start").style.display = "inline.block";
+        document.getElementById("start").style.display = "inline-block";
 
         
         this.hasStartet = false;
@@ -259,6 +263,7 @@ class View {
         document.getElementById("statistikbereich").style.display = "block";
         document.getElementById("kategorien").style.display = "none";
         document.getElementById("fortschritt").style.display = "none";
+        document.getElementById("hilfebereich").style.display = "none";
 
         const container = document.getElementById("statistikliste");
         container.innerHTML = daten.length === 0
@@ -268,13 +273,13 @@ class View {
             ).join("");
     }
 
-    showStartScreen() {
-        if (this.inProgress) {
+    showStartScreen(skipConfirm = false) {
+        if (this.inProgress && !skipConfirm) {
             const confirmed = confirm("Dein Lernfortschritt geht verloren. Fortfahren?");
             if (!confirmed) return;
-            this.p.resetStats();
         }
 
+        this.p.resetStats();
         this.hasStarted = false;
         this.inProgress = false;
 
@@ -284,6 +289,7 @@ class View {
         document.getElementById("fortschritt").style.display = "block";
         document.getElementById("start").style.display = "inline-block";
         document.getElementById("statistikbereich").style.display = "none";
+        document.getElementById("hilfebereich").style.display = "none";
 
         document.getElementById("frage").textContent = "";
         document.getElementById("feedback").textContent = "";
@@ -295,6 +301,21 @@ class View {
         const radios = document.querySelectorAll('input[name="kategorie"]');
         radios.forEach(r => r.checked = (r.value === this.lastKategorie));
     }
+
+    showHelp() {
+        this.hasStarted = false;
+        this.inProgress = false;
+
+        document.getElementById("aufgabe").style.display = "none";
+        document.getElementById("statistikbereich").style.display = "none";
+        document.getElementById("kategorien").style.display = "none";
+        document.getElementById("fortschritt").style.display = "none";
+        document.getElementById("start").style.display = "none";
+        document.getElementById("hilfebereich").style.display = "block";
+
+        // Falls Feedback noch da ist
+        document.getElementById("feedback").textContent = "";
+    }    
 }
 
 function updateOnlineStatus() {

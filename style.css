@@ -14,7 +14,14 @@
   box-sizing: border-box;
 }
 
+html{
+  height: 100%;
+} 
+
 body {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
   margin: 0;
   font-family: var(--font);
   background-color: var(--bg);
@@ -43,15 +50,18 @@ button.wrong {
 }
 
 main {
+  flex: 1;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   padding: 1rem;
   gap: 1rem;
+  width: 100%;
+  align-items: stretch;
 }
 
 .mainWindow {
   flex: 1 1 60%;
-  min-height: 100%; /*view-height (füllt mindestens die gesamte höhe des viewüprts*/
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -85,10 +95,15 @@ nav ul li a {
 
 aside {
   flex: 0 0 12rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   background-color: var(--correct);
   padding: 1rem;
   border-radius: var(--radius);
   text-align: center;
+  height: auto;
 }
 
 footer {
