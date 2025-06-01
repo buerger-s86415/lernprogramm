@@ -6,7 +6,6 @@
   --correct: #90ee90;
   --wrong: #f08080;
   --neutral: #e0e0e0;
-  --shadow: rgba(0, 0, 0, 0.05);
   --font: 'Segoe UI', sans-serif;
   --radius: 0.6rem;
 }
@@ -19,7 +18,7 @@ body {
   margin: 0;
   font-family: var(--font);
   background-color: var(--bg);
-  color: #222;
+  color: black;
 }
 
 header {
@@ -59,8 +58,6 @@ main {
   background-color: var(--bg);  
   padding: 1rem;
   border: 10px, solid;
-  box-shadow: 0 0 5px var(--shadow);
-  
   padding: 1em;
 }
 
@@ -88,7 +85,7 @@ nav ul li a {
 
 aside {
   flex: 0 0 12rem;
-  background-color: #cde89f;
+  background-color: var(--correct);
   padding: 1rem;
   border-radius: var(--radius);
   text-align: center;
@@ -203,7 +200,7 @@ footer {
   padding: 0.75rem 1rem;
   border: 1px solid #ccc;
   border-radius: var(--radius);
-  background-color: #fafafa;
+  background-color: white;
   cursor: pointer;
   font-size: 1rem;
   transition: background-color 0.3s ease;
@@ -215,20 +212,20 @@ footer {
 
 #start {
   display: block;
-  background: linear-gradient(135deg, var(--accent), #ffd95e);
-  color: #222;
+  background: var(--accent);
+  color: black;
   padding: 0.75rem 1.5rem;
   font-size: 1.3rem;
   font-weight: bold;
-  border: 2px solid #e6a800;
+  border: none;
   border-radius: var(--radius);
   cursor: pointer;
   margin: 0.5rem auto;
+  transition: background-color 0.3s ease;
 }
 
 #start:hover {
-  transform: scale(1.10);
-  background-color: #e6a800;
+  background-color: var(--correct);
 }
 
 
@@ -236,7 +233,16 @@ footer {
   font-size: 2rem;
 }
 
-/* Responsive */
+@media (min-width: 781px) {
+  .nav_buttons {
+    transition: padding 0.3s ease;
+  }
+
+  .nav_buttons:hover {
+    padding-left: 1em;
+  }
+}
+
 @media (max-width: 780px) {
   main {
     flex-direction: column;
@@ -244,6 +250,36 @@ footer {
 
   nav, article, aside {
     flex: 1 1 100%;
+  }
+
+   nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0;
+  }
+
+  nav ul li {
+    margin: 0;
+  }
+
+  nav ul li a {
+    display: inline-block;
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius);
+    background-color: var(--secondary);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  /*hier "transform/translateY" damit Box nicht größer wird */
+  .nav_buttons {
+    transition: transform 0.3s ease;
+  }
+
+  .nav_buttons:hover {
+    transform: translateY(0.5em);
   }
 
   #kategorien {
