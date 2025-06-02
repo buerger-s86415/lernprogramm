@@ -1,8 +1,9 @@
 {
   "name": "Lernprogramm",
   "short_name": "Lernen",
-  "start_url": "/Lernprogramm/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#3a7ca5"
 }
+

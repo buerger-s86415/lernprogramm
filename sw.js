@@ -2,13 +2,15 @@
 
 const CACHE_NAME = "lernapp-v1";
 const FILES_TO_CACHE = [
-  "/Lernprogramm/",
-  "/Lernprogramm/index.html",
-  "/Lernprogramm/style.css",
-  "/Lernprogramm/app.js",
-  "/Lernprogramm/manifest.json",
-  "/Lernprogramm/sw.js",
-  "/Lernprogramm/data/fragen.json"
+  "./",
+  "index.html",
+  "style.css",
+  "app.js",
+  "manifest.json",
+  "sw.js",
+  "data/fragen.json",
+  "assets/android-chrome-192x192.png",
+  "assets/android-chrome-512x512.png"
 ];
 
 // Installation: Dateien cachen

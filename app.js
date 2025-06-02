@@ -150,6 +150,7 @@ class View {
     }
 
     async start() {
+        this.p.resetStats();
         this.hasStarted = true;
         this.inProgress = true;
         this.isFinished = false;
@@ -338,6 +339,7 @@ class View {
         document.getElementById("ueberbereich").style.display = "block";
         document.getElementById("feedback").textContent = "";
     }
+
 }
 
 function updateOnlineStatus() {
