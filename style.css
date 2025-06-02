@@ -126,18 +126,26 @@ footer {
   display: flex;
 }
 
+.bar-green,
+.bar-red,
+.bar-grey {
+  transition: width 0.3s ease;
+  height: 100%;
+}
+
 .bar-green {
-  width: 40%;
   background-color: var(--correct);
+  z-index: 1;
 }
 
 .bar-red {
-  width: 20%;
   background-color: var(--wrong);
+  z-index: 2;
 }
 
 .bar-grey {
-  flex-grow: 1;
+  background-color: var(--neutral);
+  z-index: 0;
 }
 
 .kat-buttons {

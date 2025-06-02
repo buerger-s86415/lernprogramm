@@ -55,6 +55,7 @@ class Model {
 class Presenter {
     constructor() {
         this.currentIndex = 0;
+        this.maxFragen = 15;
         this.stats = {
             richtig: 0,
             falsch: 0
@@ -88,8 +89,9 @@ class Presenter {
         }
         console.log(`Richtig: ${this.stats.richtig}, Falsch: ${this.stats.falsch}, gesamt: ${gesamt}`);
         this.currentIndex++;
+        this.v.updateProgressBar(this.stats.richtig, this.stats.falsch);
         
-        if (this.currentIndex >= 3) {
+        if (this.currentIndex >= this.maxFragen) {
             this.v.showStats(this.stats);
             this.saveStats();
             return;
@@ -151,6 +153,7 @@ class View {
 
     async start() {
         this.p.resetStats();
+        this.updateProgressBar(0, 0);
         this.hasStarted = true;
         this.inProgress = true;
         this.isFinished = false;
@@ -340,6 +343,22 @@ class View {
         document.getElementById("feedback").textContent = "";
     }
 
+    updateProgressBar(richtig, falsch) {
+        const gesamt = richtig + falsch;
+        const total = 15;
+
+        const grün = (richtig / total) * 100;
+        const rot = (falsch / total) * 100;
+        const grau = 100 - grün - rot;
+
+        const barGrün = document.querySelector(".bar-green");
+        const barRot = document.querySelector(".bar-red");
+        const barGrau = document.querySelector(".bar-grey");
+
+        barGrün.style.width = `${grün}%`;
+        barRot.style.width = `${rot}%`;
+        barGrau.style.width = `${grau}%`;
+    }
 }
 
 function updateOnlineStatus() {
