@@ -13,6 +13,16 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('offline', updateOnlineStatus);
 });
 
+const REST_BASE = 'https://idefix.informatik.htw-dresden.de:8888/api';
+const REST_USER = 's86415@htw-dresden.de';
+const REST_PASS = 'IchWohneGanzObenSeit-2023';
+
+function authHeader() {
+    return {
+        'Authorization': 'Basic ' + btoa(`${REST_USER}:${REST_PASS}`),
+        'Content-Type': 'application/json'
+    };
+}
 
 // #################### Model ####################
 class Model {
@@ -39,7 +49,7 @@ class Model {
 
         if (kategorie === "quiz"){
             return {
-                frage: aufgabe.question,
+                frage: aufgabe.text,
                 antworten: aufgabe.options,
                 id: aufgabe.id
             };
@@ -65,38 +75,42 @@ class Model {
 
     async checkAnswer(task, chosenIndex, kategorie) {
         if (kategorie === "quiz") {
-            const response = await fetch(`https://idefix.informatik.htw-dresden.de/webquiz/api/quizzes/${task.id}/solve`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Basic" + btoa("s86415:IchWohneGanzObenSeit-2023")
-                },
-                body: JSON.stringify([chosenIndex])
-            });
-
+            try{
+                const response = await fetch(`${REST_BASE}/quizzes/${task.id}/solve`, {
+                    method: "POST",
+                    headers: authHeader(),
+                    body: JSON.stringify([chosenIndex])
+                });
+            if(!response.ok) throw new Error(`Status: ${response.status}`);
             const result = await response.json();
-            return result.correct === true;
-        } else {
+            return result.success === true;
+        } catch (err) {
+            console.error(`Fehler bei Antwortprüfung für Quiz ID ${task.id}:`, err);
+            return false;
+          }
+        }
+        else {
             return task.loesung === chosenIndex;
         }
     }
 
     async loadQuizTasks() {
-        const res = await fetch("https://idefix.informatik.htw-dresden.de/webquiz/api/quizzes", {
-            headers: {
-                "Authorization": "Basic" + btoa("s86415:IchWohneGanzObenSeit-2023")
-            }
-        });
+        try {
+            const res = await fetch(`${REST_BASE}/quizzes?page=0`, {
+                method: `GET`,
+                headers: authHeader()
+            });
 
-        if(!res.ok) throw new Error("Antowrt nicht OK");
+            if (!res.ok) throw new Error(`Status: ${res.status}`);
 
-        const quizzes = await res.json();
-        console.log("GELADEN:", quizzes);
-        this.alleFragen["quiz"] = quizzes.slice(0, 15);
-    } catch (err){
-        console.error("Fehler beim Laden der Quiz Aufgaben: ", err);
-        alert("Quiz-Server nicht erreichbar");
-        this.alleFragen["quiz"] = []; // nur leer machen zur sicherheit
+            const data = await res.json();
+            console.log("GELADEN:", data);
+            this.alleFragen["quiz"] = data.content.slice(0, 15);
+        } catch (err) {
+            console.error("Fehler beim Laden der Quiz Aufgaben: ", err);
+            alert("Quiz-Server nicht erreichbar");
+            this.alleFragen["quiz"] = [];
+        }
     }
 
     shuffle(array) {
@@ -104,7 +118,7 @@ class Model {
             .map(item => ({ sort: Math.random(), value: item }))
             .sort((a, b) => a.sort - b.sort)
             .map(entry => entry.value);
-    }
+    }    
 }
 
 // ################ Presenter ###################
