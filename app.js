@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 class Model {
     constructor() {
         this.alleFragen = null;
+        this.zufallsFragen = {};
     }
 
     async loadLocalQuestions() {
@@ -26,8 +27,24 @@ class Model {
     }
 
     getLocalTask(kategorie, nr) {
-        const fragen = this.alleFragen[kategorie];
+        if (!this.zufallsFragen[kategorie]) {
+            const original = this.alleFragen[kategorie];
+            this.zufallsFragen[kategorie] = this.shuffle([...original]);
+        }
+
+        const fragen = this.zufallsFragen[kategorie];
+        if(!fragen || this.alleFragen === 0) return null;
+
         const aufgabe = fragen[nr % fragen.length];
+
+        if (kategorie === "quiz"){
+            return {
+                frage: aufgabe.question,
+                antworten: aufgabe.options,
+                id: aufgabe.id
+            };
+        }
+
         const { gemischt, loesungIndex } = this.mischeAntworten(aufgabe.l);
         return {
             frage: aufgabe.a,
@@ -46,8 +63,47 @@ class Model {
         return { gemischt, loesungIndex };
     }
 
-    checkAnswer(task, chosenIndex) {
-        return task.loesung === chosenIndex;
+    async checkAnswer(task, chosenIndex, kategorie) {
+        if (kategorie === "quiz") {
+            const response = await fetch(`https://idefix.informatik.htw-dresden.de/webquiz/api/quizzes/${task.id}/solve`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Basic" + btoa("s86415:IchWohneGanzObenSeit-2023")
+                },
+                body: JSON.stringify([chosenIndex])
+            });
+
+            const result = await response.json();
+            return result.correct === true;
+        } else {
+            return task.loesung === chosenIndex;
+        }
+    }
+
+    async loadQuizTasks() {
+        const res = await fetch("https://idefix.informatik.htw-dresden.de/webquiz/api/quizzes", {
+            headers: {
+                "Authorization": "Basic" + btoa("s86415:IchWohneGanzObenSeit-2023")
+            }
+        });
+
+        if(!res.ok) throw new Error("Antowrt nicht OK");
+
+        const quizzes = await res.json();
+        console.log("GELADEN:", quizzes);
+        this.alleFragen["quiz"] = quizzes.slice(0, 15);
+    } catch (err){
+        console.error("Fehler beim Laden der Quiz Aufgaben: ", err);
+        alert("Quiz-Server nicht erreichbar");
+        this.alleFragen["quiz"] = []; // nur leer machen zur sicherheit
+    }
+
+    shuffle(array) {
+        return array
+            .map(item => ({ sort: Math.random(), value: item }))
+            .sort((a, b) => a.sort - b.sort)
+            .map(entry => entry.value);
     }
 }
 
@@ -71,6 +127,12 @@ class Presenter {
         const kategorie = document.querySelector('input[name="kategorie"]:checked').value;
 
         if (!this.m.alleFragen) {
+            this.m.alleFragen = {};
+        }
+
+        if(kategorie === "quiz" && !this.m.alleFragen.quiz) {
+            await this.m.loadQuizTasks();
+        } else if (!this.m.alleFragen[kategorie]) {
             await this.m.loadLocalQuestions();
         }
 
@@ -79,9 +141,17 @@ class Presenter {
         this.v.renderButtons(this.task.antworten);
     }
 
-    checkAnswer(index) {
-        const korrekt = this.m.checkAnswer(this.task, index);
+    async checkAnswer(index) {
+        const kategorie = document.querySelector('input[name="kategorie"]:checked').value;
+
+        if(!this.task){
+            console.warn("Keine Aufgabe geladen");
+            return false;
+        }
+
+        const korrekt = await this.m.checkAnswer(this.task, index, kategorie);
         const gesamt = this.stats.richtig + this.stats.falsch + 1;
+
         if (korrekt) {
             this.stats.richtig++;
         } else {
@@ -209,16 +279,17 @@ class View {
         if (event.target.nodeName === "BUTTON") {
             const index = Number(event.target.getAttribute("data-index"));
             const button = event.target;
-            const isCorrect = this.p.checkAnswer(index); //true oder false
             
-            //Farbe
-            const className = isCorrect ? "correct" : "wrong";
-            button.classList.add(className);
+            this.p.checkAnswer(index).then(isCorrect => {
+                //Farbe
+                const className = isCorrect ? "correct" : "wrong";
+                button.classList.add(className);
 
-            //kurz warten, dann weiter
-            setTimeout(()=>{
-                button.classList.remove(className);
-            }, 500);
+                //kurz warten, dann weiter
+                setTimeout(()=>{
+                    button.classList.remove(className);
+                }, 500);
+            });
         }
     }
 
@@ -278,7 +349,10 @@ class View {
         const container = document.getElementById("statistikliste");
         container.innerHTML = daten.length === 0
             ? "<p>Keine Statistiken vorhanden.</p>"
-            : daten.map(entry =>
+            : daten
+            .slice()
+            .reverse()            
+            .map(entry =>
                 `<p>🕒 ${entry.zeit}: ✅ ${entry.richtig} / ❌ ${entry.falsch}</p>`
             ).join("");
     }
