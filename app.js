@@ -250,11 +250,34 @@ class View {
 
     renderText(text, kategorie) {
         const frageDiv = document.getElementById("frage");
+        frageDiv.innerHTML = "";
+
+        console.log("KATEGORIE: ", kategorie);
+        if (kategorie === "noten" && typeof Vex !== "undefined") {
+            console.log("Vex rendertext block");
+            frageDiv.innerHTML = "";
+            const vf = new Vex.Flow.Factory({
+                renderer: { elementId: "frage", width: 250, height: 120 }
+            });
+            const score = vf.EasyScore();
+            const system = vf.System();
+            const notes = text.replace("notes = ", "").trim();
+            const voice = score.voice(score.notes(notes, { stem: 'up' }));
+            voice.setStrict(false);
+            
+            system.addStave({ voices: [voice] })
+                .addClef("treble")
+                .addTimeSignature("4/4");
+            vf.draw();
+            return;
+        }
+
         if (kategorie === "mathe" && typeof katex !== "undefined") {
             katex.render(text, frageDiv, { throwOnError: false });
-        } else {
-            frageDiv.textContent = text;
+            return;
         }
+            
+        frageDiv.textContent = text;
     }
 
     renderButtons(antworten) {

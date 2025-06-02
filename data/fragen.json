@@ -1,11 +1,21 @@
 {
   "noten": [
-    { "a": "Welche Note ist (C4)?", "l": ["C", "D", "E", "F"] },
-    { "a": "Welche Note ist (E4)?", "l": ["E", "F", "G", "D"] }
+    { "a": "notes = C4/q", "l": ["C", "D", "E", "F"] },
+    { "a": "notes = E4/q", "l": ["E", "F", "G", "D"] },
+    { "a": "notes = G4/q", "l": ["G", "A", "F", "C"] },
+    { "a": "notes = A4/q", "l": ["A", "B", "G", "C"] },
+    { "a": "notes = F4/q", "l": ["F", "E", "D", "G"] },
+    { "a": "notes = D4/q", "l": ["D", "E", "C", "B"] },
+    { "a": "notes = B4/q", "l": ["H", "A", "C", "F"] },
+    { "a": "notes = C4/q, E4/q, G4/q", "l": ["C-Dur", "A-Moll", "F-Dur", "G7"] },
+    { "a": "notes = D4/q, F4/q, A4/q", "l": ["D-Moll", "D-Dur", "G-Dur", "C-Dur"] },
+    { "a": "notes = F4/q, A4/q, C5/q", "l": ["F-Dur", "C-Dur", "D-Moll", "G-Moll"] }
   ],
-  "akkorde": [
-    { "a": "Welche Töne bilden einen C-Dur-Akkord?", "l": ["C E G", "C D G", "C F A", "C E A"] },
-    { "a": "Welche Töne bilden einen G-Dur-Akkord?", "l": ["G B D", "G A D", "G B F", "G D F"] }
+  "web": [
+    { "a": "Welche Authentifizierung bietet HTTP?", "l": ["Digest Access Authentication", "OTP", "OAuth", "2-Faktor-Authentifizierung"] },
+    { "a": "Welches Transportprotokoll eignet sich für zeitkritische Übertragungen?", "l": ["UDP", "TCP", "HTTP", "Fast Retransmit"] },
+    { "a": "Was ist der Zweck von HTTPS?", "l": ["Verschlüsselung", "Caching", "Kompression", "Authentifizierung"] },
+    { "a": "Was bedeutet DOM in der Webentwicklung?", "l": ["Document Object Model", "Digital Object Manager", "Data Over Module", "DOMination Layer"] }
   ],
   "mathe": [
     { "a": "x^2 + x^2", "l": ["2x^2", "x^4", "2x", "x^2 + x^2"] },
