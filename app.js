@@ -128,6 +128,7 @@ class View {
         this.setHandlers();
         this.hasStarted = false;
         this.inProgress = false;
+        this.isFinished = false;
         this.lastKategorie = document.querySelector('input[name="kategorie"]:checked').value;
 
         document.querySelectorAll('input[name="kategorie"]').forEach(radio => {
@@ -141,6 +142,7 @@ class View {
         document.getElementById("nav-statistik").addEventListener("click", this.showAllStats.bind(this));
         document.getElementById("nav-home").addEventListener("click", this.showStartScreen.bind(this));
         document.getElementById("nav-hilfe").addEventListener("click", this.showHelp.bind(this));
+        document.getElementById("nav-info").addEventListener("click", this.showAbout.bind(this));
         this.lastKategorie = document.querySelector('input[name="kategorie"]:checked').value;
         document.querySelectorAll('input[name="kategorie"]').forEach(radio => {
             radio.addEventListener("change", this.onKategorieChange.bind(this));
@@ -150,6 +152,7 @@ class View {
     async start() {
         this.hasStarted = true;
         this.inProgress = true;
+        this.isFinished = false;
 
         document.getElementById("aufgabe").classList.add("visible");
         document.getElementById("aufgabe").style.display = "block";
@@ -218,9 +221,10 @@ class View {
     onKategorieChange(event) {
         const neueKategorie = event.target.value;
 
-        if (!this.hasStarted) {
+        if (!this.hasStarted || this.isFinished) {
             // Wenn kein Durchlauf aktiv, letzte Auswahl merken
             this.lastKategorie = neueKategorie;
+            this.showStartScreen(true);
             return;
         }
 
@@ -252,6 +256,7 @@ class View {
         
         this.hasStartet = false;
         this.inProgress = false;
+        this.isFinished = true;
     }
 
     showAllStats() {
@@ -264,6 +269,7 @@ class View {
         document.getElementById("kategorien").style.display = "none";
         document.getElementById("fortschritt").style.display = "none";
         document.getElementById("hilfebereich").style.display = "none";
+        document.getElementById("ueberbereich").style.display = "none";
 
         const container = document.getElementById("statistikliste");
         container.innerHTML = daten.length === 0
@@ -290,7 +296,7 @@ class View {
         document.getElementById("start").style.display = "inline-block";
         document.getElementById("statistikbereich").style.display = "none";
         document.getElementById("hilfebereich").style.display = "none";
-
+        document.getElementById("ueberbereich").style.display = "none";
         document.getElementById("frage").textContent = "";
         document.getElementById("feedback").textContent = "";
 
@@ -312,10 +318,26 @@ class View {
         document.getElementById("fortschritt").style.display = "none";
         document.getElementById("start").style.display = "none";
         document.getElementById("hilfebereich").style.display = "block";
+        document.getElementById("ueberbereich").style.display = "none";
 
         // Falls Feedback noch da ist
         document.getElementById("feedback").textContent = "";
-    }    
+    }
+    
+    showAbout() {
+        this.hasStarted = false;
+        this.inProgress = false;
+
+        document.getElementById("aufgabe").style.display = "none";
+        document.getElementById("statistikbereich").style.display = "none";
+        document.getElementById("kategorien").style.display = "none";
+        document.getElementById("fortschritt").style.display = "none";
+        document.getElementById("start").style.display = "none";
+        document.getElementById("hilfebereich").style.display = "none";
+
+        document.getElementById("ueberbereich").style.display = "block";
+        document.getElementById("feedback").textContent = "";
+    }
 }
 
 function updateOnlineStatus() {
