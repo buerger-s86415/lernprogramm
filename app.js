@@ -396,7 +396,7 @@ class View {
 
     showStartScreen(skipConfirm = false) {
         if (this.inProgress && !skipConfirm) {
-            const confirmed = confirm("Dein Lernfortschritt geht verloren. Fortfahren?");
+            const confirmed = confirm("Dein Fortschritt geht verloren. Fortfahren?");
             if (!confirmed) return;
         }
 
@@ -473,6 +473,7 @@ class View {
 }
 
 function updateOnlineStatus() {
+    console.log("updateOnlineStatus aufgerufen");
     const icon = document.querySelector(".status-icon");
     const title = document.querySelector("aside h3");
 

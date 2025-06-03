@@ -8,24 +8,25 @@ Ziel der Anwendung ist es, Fragen zufällig darzustellen, die Antworten auszuwer
 
 ---
 
-## ✅ Erfüllte Anforderungen laut Aufgabenstellung
+- Auswahl aus mehreren Aufgabenkategorien:
+  - Mathematik (gerendert mit **KaTeX**)
+  - Notenlesen (gerendert mit **VexFlow**)
+  - Webtechnologien (Multiple-Choice)
+  - Quizfragen per REST-API von externem Server
+- Zufällig gemischte Antwortmöglichkeiten
+- Fortschrittsanzeige mit Farbverlauf (grün/rot/grau)
+- Abschlusstestatistik + Speicherung der Ergebnisse im localStorage
+- Offlinefähig (via Service Worker)
+- Responsives Design für verschiedene Endgeräte
+- PWA-fähig (installierbar, offline nutzbar, Manifest, Icons)
 
-- HTML5 zur Strukturierung
-- CSS3 zur Gestaltung inkl. responsive Design (mobile Ansicht)
-- JavaScript (ECMAScript, strict mode) zur Steuerung
-- DOM-Manipulation (Anzeige von Fragen, Antworten, Fortschritt)
-- Datenhaltung per JSON (lokale Fragen)
-- Nutzung einer REST-API für externe Fragen (vorbereitet)
-- Model-View-Presenter-Architektur (MVP)
-- Anzeige des Lernfortschritts per Progressbar
-- Anzeige einer Auswertungsstatistik
-- Kategorienauswahl per Radiobuttons
-- Unterstützung mehrerer Fragetypen (z. B. Mathe)
-- PWA mit Service Worker und manifest.json
-- Offline-Nutzung über Cache
-- Bereitstellung auf dem Webserver der HTW Dresden
+## 🌐 Externer Quiz-Server
+Fragen der Kategorie `Quiz` werden über folgende REST-Schnittstelle geladen:
+- GET `https://idefix.informatik.htw-dresden.de/webquiz/api/quizzes`
+- POST `https://idefix.informatik.htw-dresden.de/webquiz/api/quizzes/{id}/solve
 
----
+
+Authentifizierung via **Basic Auth** (Benutzername: `s86415`). Die Antworten werden serverseitig überprüft.
 
 ## 🗂️ Dateistruktur
 
@@ -40,42 +41,29 @@ Lernprogramm/
 │   └── fragen.json
 ├── assets/
 │   ├── icon.png
+|   ├── ... (weitere icons)
 │   └── header.jpg
 └── README.md
-```
 
 ---
 
-## 🚀 Nutzungshinweise
+## 🚀 Nutzung
 
-- Die Anwendung kann im Browser geöffnet werden:
-  [`https://www.informatik.htw-dresden.de/~sxxxxx/Lernprogramm/`](https://www.informatik.htw-dresden.de/~sxxxxx/Lernprogramm/)
-- Alternativ kann sie auf mobilen Geräten **installiert** werden (PWA-Icon erscheint im Browser)
-- Die Bedienung erfolgt über:
-  - Kategorien auswählen
-  - Start-Button klicken
-  - Frage beantworten
-  - Fortschritt verfolgen
+1. Projekt ins Verzeichnis `~/public_html/Lernprogramm` auf dem HTW-Webserver laden
+2. Aufruf im Browser:  
+   `https://www.informatik.htw-dresden.de/~s86415/Lernprogramm/`
+3. Installieren über Browser-Prompt möglich (PWA)
 
 ---
 
 ## 📦 Technisches
 
-- HTML5 + CSS3 (Media Queries)
-- JavaScript (strict mode)
-- JSON zur Datenstrukturierung
-- MVP-Architektur
-- Cache über Service Worker (sw.js)
-- manifest.json für PWA-Installierbarkeit
-- keine externen Frameworks (pures JS & CSS)
-
----
-
-## ⚠️ Hinweise & bekannte Probleme
-
-- Die REST-API-Anbindung ist vorbereitet, aber noch nicht vollständig eingebunden
-- Die Mathe-Anzeige mit KaTeX ist optional geplant
-- Barrierefreiheit (a11y) ist noch nicht vollständig umgesetzt
+- **Architektur:** Model-View-Presenter (MVP)
+- **JS ohne Framework**, strikt im ECMAScript-Modus
+- `app.js`: Aufgabenlogik und Interaktion
+- `style.css`: flexibles Layout, einfache Animationen
+- `sw.js`: Service Worker für Offline-Nutzung
+- `manifest.json`: Konfiguration für PWA
 
 ---
 
@@ -83,9 +71,9 @@ Lernprogramm/
 
 Für Planung, Strukturierung und Codierung wurde ChatGPT (GPT-4, Mai 2025) unterstützend eingesetzt, insbesondere für:
 
-- DOM-Manipulation
-- manifest.json
-- Technische Erklärungen (README, Aufbau, Begriffe)
+- Hilfe bei der REST-Anbindung und Basic Auth
+- Fehlerbehebung im Offline-Modus (Service Worker Debugging)
+- Implementierung von VexFlow und KaTeX
 
 Alle erstellten Inhalte wurden verstanden, geprüft und im Kontext der Aufgabenstellung angepasst.
 
@@ -99,9 +87,5 @@ Alle erstellten Inhalte wurden verstanden, geprüft und im Kontext der Aufgabens
 
 ---
 
-## 📌 Weiterentwicklungsideen
-
-- Speicherung des Fortschritts im `localStorage`
 - Mehrnutzerbetrieb mit Logins
 - Kategorie Notenlernen mit Web Audio API + virtueller Klaviatur
-- REST-API vollständig integrieren (inkl. Antwortvalidierung)
