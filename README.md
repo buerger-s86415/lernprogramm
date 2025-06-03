@@ -28,23 +28,6 @@ Fragen der Kategorie `Quiz` werden über folgende REST-Schnittstelle geladen:
 
 Authentifizierung via **Basic Auth** (Benutzername: `s86415`). Die Antworten werden serverseitig überprüft.
 
-## 🗂️ Dateistruktur
-
-```
-Lernprogramm/
-├── index.html
-├── style.css
-├── app.js
-├── sw.js
-├── manifest.json
-├── data/
-│   └── fragen.json
-├── assets/
-│   ├── icon.png
-|   ├── ... (weitere icons)
-│   └── header.jpg
-└── README.md
-
 ---
 
 ## 🚀 Nutzung
