@@ -39,8 +39,6 @@ Im Modul "Webprogrammierung" an der HTW Dresden sollte ein webbasiertes Lernprog
 
 ## Probleme und Lösungen
 
-Ich habe versehentlich auf einem eigenem (nicht "geforktem") Repository gearbeitet. Deshalb habe ich dies nachgeholt und die dateien in das von Professor Vogt bereitgestellte kopiert. Falls die Fortschritte trotzdessen naachverfolgt werden sollen können Sie das Github Repository über diesen Link erreichen: 
-
 | Problem | Lösung |
 |--------|--------|
 | REST-Authentifizierung schlug fehl | Manuelle Base64-Kodierung im Header mit `fetch()` |
